@@ -34,11 +34,10 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
     TextServicesManager tsm;
 
     // will contain appended suggestions from userdictionary and default suggestions
-    private static final List<DictionaryWrapper> finalSuggestion = new ArrayList<>();
+    public static final List<DictionaryWrapper> finalSuggestion = new ArrayList<>();
     // will contain suggestions for userdictionary
-    private static final List<DictionaryWrapper> suggestions = new ArrayList<>();
-    //store the size of user dictionary finalSuggestion
-    int sizeOfUserDictionary = 0;
+    public static final List<DictionaryWrapper> suggestions = new ArrayList<>();
+    public static final List<String> temp_suggestions = new ArrayList<>();
     //store how many times suggestion has been tried for current word
     int timesSuggestionTried = 0;
 
@@ -59,6 +58,7 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
     public void onGetSuggestions(SuggestionsInfo[] results) {
         finalSuggestion.clear();
         suggestions.clear();
+        temp_suggestions.clear();
 
         //add from userdictionary
         String[] args = {"%" + words[words.length - 1] + "%"};
@@ -73,14 +73,14 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
                 wrapper.FREQUENCY = 255;
 
                 //String suggestion = results[i].getSuggestionAt(j);
-                if (!finalSuggestion.contains(wrapper.WORD)) {
+                if (!temp_suggestions.contains(wrapper.WORD)) {
                     suggestions.add(wrapper);
+                    temp_suggestions.add(wrapper.WORD);
                 }
             }
             finalSuggestion.addAll(suggestions);
         }
         updateAdapter();
-        sizeOfUserDictionary = finalSuggestion.size();
 
     }
 
@@ -89,15 +89,15 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
 
     }
 
-    void updateAdapter(){
+    void updateAdapter() {
         if (suggestions.size() != 0) {
 
-            if(!finalSuggestion.contains(words[words.length-1])){
+            if (!temp_suggestions.contains(words[words.length - 1])) {
 
                 DictionaryWrapper wrapper = new DictionaryWrapper();
-                wrapper.WORD = words[words.length-1];
+                wrapper.WORD = words[words.length - 1];
                 wrapper.FREQUENCY = 255;
-                finalSuggestion.add(0,wrapper);
+                finalSuggestion.add(0, wrapper);
             }
             adapter.notifyDataSetChanged();
         } else {
@@ -112,6 +112,7 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -192,7 +193,6 @@ public class SpellCheckerActivity extends Activity implements SpellCheckerSessio
         });
 
     }
-
 
 
     /**

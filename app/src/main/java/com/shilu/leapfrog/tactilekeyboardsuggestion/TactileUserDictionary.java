@@ -59,13 +59,17 @@ public class TactileUserDictionary {
         c.moveToFirst();
         if (!c.isAfterLast()) {
             //gets the value from the column.
-            DictionaryWrapper wrapper = new DictionaryWrapper();
+            do {
+                android.util.Log.e("coibtr",c.getCount()+"");
+                DictionaryWrapper wrapper = new DictionaryWrapper();
 //            wrapper.APP_ID = c.getInt(c.getColumnIndex(UserDictionary.Words.APP_ID));
-            wrapper.FREQUENCY = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
-            wrapper.ID = c.getInt(c.getColumnIndex(UserDictionary.Words._ID));
-            wrapper.WORD = c.getString(c.getColumnIndex(UserDictionary.Words.WORD));
+                wrapper.FREQUENCY = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
+                wrapper.ID = c.getInt(c.getColumnIndex(UserDictionary.Words._ID));
+                wrapper.WORD = c.getString(c.getColumnIndex(UserDictionary.Words.WORD));
 
-            suggestionList.add(wrapper);
+                suggestionList.add(wrapper);
+                SpellCheckerActivity.temp_suggestions.add(wrapper.WORD);
+            }while (c.moveToNext());
         }
        return suggestionList;
     }
