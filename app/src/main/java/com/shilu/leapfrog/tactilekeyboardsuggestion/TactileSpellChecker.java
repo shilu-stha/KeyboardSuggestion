@@ -23,6 +23,11 @@ import java.util.Locale;
  */
 public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSessionListener {
 
+    private static final String SETTINGS_PKG = "com.android.settings";
+    private static final String SETTINGS_CLS = "com.android.settings.Settings$SpellCheckersSettingsActivity";
+    private static final String ERROR_ENABLESPELLCHECKER_MSG = "Please turn on the spell checker from setting";
+    private static final String WORD_TYPE_INBUILD = "InBuilt_Dictionary";
+    private static final String WORD_TYPE_NEW = "New_Word";
 
     private TextServicesManager textServicesManager;
     private SpellCheckerSession spellCheckerSession;
@@ -78,7 +83,7 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
                 DictionaryWrapper wrapper = new DictionaryWrapper();
                 wrapper.WORD = results[i].getSuggestionAt(j);
                 wrapper.FREQUENCY = 255;
-                wrapper.TYPE = "InBuilt_Dictionary";
+                wrapper.TYPE = WORD_TYPE_INBUILD;
                 //String suggestion = results[i].getSuggestionAt(j);
                 if (!temp_suggestions.contains(wrapper.WORD)) {
                     suggestions.add(wrapper);
@@ -94,7 +99,7 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
                 DictionaryWrapper wrapper = new DictionaryWrapper();
                 wrapper.WORD = enteredWord;
                 wrapper.FREQUENCY = 255;
-                wrapper.TYPE = "New_Word";
+                wrapper.TYPE = WORD_TYPE_NEW;
                 finalSuggestion.add(0, wrapper);
             }
             isSuggestionsGathered = true;
@@ -105,7 +110,7 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
                 timesSuggestionTried = timesSuggestionTried + 1;
             }
         }
-        mlistener.getSuggestions(finalSuggestion);
+        mlistener.getSuggestions(enteredWord, finalSuggestion);
     }
 
     @Override
@@ -123,7 +128,7 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
             }
     }
 
-    /**
+    /**"com.android.settings"
      * Show toast.
      * Goto spellchecker settings.
      *
@@ -131,10 +136,9 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
      */
     private void gotoSpellCheckerSetting() {
         // Show the message to user
-        Toast.makeText(context, "Please turn on the spell checker from setting", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, ERROR_ENABLESPELLCHECKER_MSG, Toast.LENGTH_LONG).show();
         // open the settings page for user to turn spell checker ON
-        ComponentName componentToLaunch = new ComponentName("com.android.settings",
-                "com.android.settings.Settings$SpellCheckersSettingsActivity");
+        ComponentName componentToLaunch = new ComponentName(SETTINGS_PKG, SETTINGS_CLS);
         Intent intent = new Intent();
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.setComponent(componentToLaunch);
@@ -150,12 +154,18 @@ public class TactileSpellChecker implements SpellCheckerSession.SpellCheckerSess
         return finalSuggestion;
     }
 
+    // call method to add new word to the dictionary
+    public void addToDictionary(int position) {
+        tactileUserDictionary.checkIfFrequencyNeedsToBeUpdated(finalSuggestion.get(position).WORD);
+
+    }
 
     public void setTaskListener(CheckerListener listener) {
         mlistener = listener;
     }
 
+
     public interface CheckerListener {
-        public void getSuggestions(List<DictionaryWrapper> list);
+        public void getSuggestions(String enteredWord, List<DictionaryWrapper> list);
     }
 }

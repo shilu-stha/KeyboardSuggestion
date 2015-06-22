@@ -89,7 +89,7 @@ public class SpellCheckerActivity extends Activity {
                                                     }
                                                 }
                                                 //add selected words to UserDictionary
-                                                tactDictionary.checkIfFrequencyNeedsToBeUpdated(finalSuggestion.get(position).WORD);
+                                                TactileSpellChecker.getInstance(getApplicationContext()).addToDictionary(position);
 
                                                 edt_input.setText(newSentence);
                                                 edt_input.setSelection(edt_input.getText().length());
@@ -103,7 +103,7 @@ public class SpellCheckerActivity extends Activity {
     TactileSpellChecker.CheckerListener checkerListener = new TactileSpellChecker.CheckerListener() {
 
         @Override
-        public void getSuggestions(List<DictionaryWrapper> list) {
+        public void getSuggestions(String enteredWord, List<DictionaryWrapper> list) {
             if (list.size() != 0) {
                 finalSuggestion.clear();
                 listView.setVisibility(View.VISIBLE);

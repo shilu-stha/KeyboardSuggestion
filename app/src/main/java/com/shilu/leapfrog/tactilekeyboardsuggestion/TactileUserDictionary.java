@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TactileUserDictionary {
+    private static final int FREQ_NONE = -1;
+    private static final String APP_ID = "UID_Tactile_Keyboard";
+    private static final String WORD_TYPE = "User_Dictionary";
     private final Context context;
     String[] SELECTION_COLUMNS = { UserDictionary.Words._ID, UserDictionary.Words.WORD, UserDictionary.Words.FREQUENCY };
     String SELECTION_CONDITION = UserDictionary.Words.WORD + " LIKE ? ";
@@ -38,19 +41,16 @@ public class TactileUserDictionary {
         c.moveToFirst();
         if (!c.isAfterLast()) {
 
-                android.util.Log.e("update freq == ", suggestionToUpdate);
                 int dictFreq = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
-                android.util.Log.e("update freq table == ", dictFreq + "");
                 ContentValues contentValue = new ContentValues();
-                contentValue.put(UserDictionary.Words.APP_ID, "UID_Tactile_Keyboard");
+                contentValue.put(UserDictionary.Words.APP_ID, APP_ID);
                 contentValue.put(UserDictionary.Words.FREQUENCY, String.valueOf(dictFreq + 1));
                 context.getContentResolver().update(UserDictionary.Words.CONTENT_URI, contentValue, UPDATE_CONDITION,
                         new String[]{suggestionToUpdate});
         } else {
-            android.util.Log.e("add freq == ", suggestionToUpdate);
             ContentValues contentValue = new ContentValues();
-            contentValue.put(UserDictionary.Words.APP_ID, "UID_Tactile_Keyboard");
-            contentValue.put(UserDictionary.Words.FREQUENCY, "10");
+            contentValue.put(UserDictionary.Words.APP_ID, APP_ID);
+            contentValue.put(UserDictionary.Words.FREQUENCY, FREQ_NONE);
             contentValue.put(UserDictionary.Words.WORD, suggestionToUpdate);
             context.getContentResolver().insert(UserDictionary.Words.CONTENT_URI, contentValue);
         }
@@ -77,7 +77,7 @@ public class TactileUserDictionary {
                 wrapper.FREQUENCY = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
                 wrapper.ID = c.getInt(c.getColumnIndex(UserDictionary.Words._ID));
                 wrapper.WORD = c.getString(c.getColumnIndex(UserDictionary.Words.WORD));
-                wrapper.TYPE = "User_Dictionary";
+                wrapper.TYPE = WORD_TYPE;
                 suggestionList.add(wrapper);
                 TactileSpellChecker.temp_suggestions.add(wrapper.WORD);
             }while (c.moveToNext());
