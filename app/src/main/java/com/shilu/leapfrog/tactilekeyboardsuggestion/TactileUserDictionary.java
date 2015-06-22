@@ -1,7 +1,10 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 /**
- * Created by leapfrog on 6/19/15.
+ * Make required communications with UserDictionary
+ *
+ * @author shilushrestha
+ * @date 6/19/15.
  */
 
 import android.content.ContentValues;
@@ -21,11 +24,13 @@ public class TactileUserDictionary {
     TactileUserDictionary(Context context){
         this.context = context;
     }
+
     /**
-     * Check if frequency of the userDictionary needs to be increased.
+     * Check and adds or updates the word into the userDictionary.
      *
      * @param suggestionToUpdate
-     * @author Shilu
+     *
+     * @author shilushrestha
      */
     public void checkIfFrequencyNeedsToBeUpdated(String suggestionToUpdate) {
         Cursor c = context.getContentResolver().query(UserDictionary.Words.CONTENT_URI, SELECTION_COLUMNS, UPDATE_CONDITION,
@@ -51,6 +56,14 @@ public class TactileUserDictionary {
         }
     }
 
+    /**
+     * Returns the probable word from userDictionary.
+     *
+     * @param args
+     * @return
+     *
+     * @author shilushrestha
+     */
     public List<DictionaryWrapper> addWordFromDictionary(String[] args){
         List<DictionaryWrapper> suggestionList = new ArrayList<>();
 
@@ -61,12 +74,13 @@ public class TactileUserDictionary {
             //gets the value from the column.
             DictionaryWrapper wrapper = new DictionaryWrapper();
 //            wrapper.APP_ID = c.getInt(c.getColumnIndex(UserDictionary.Words.APP_ID));
-            wrapper.FREQUENCY = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
-            wrapper.ID = c.getInt(c.getColumnIndex(UserDictionary.Words._ID));
-            wrapper.WORD = c.getString(c.getColumnIndex(UserDictionary.Words.WORD));
-
-            suggestionList.add(wrapper);
-        }
+                wrapper.FREQUENCY = c.getInt(c.getColumnIndex(UserDictionary.Words.FREQUENCY));
+                wrapper.ID = c.getInt(c.getColumnIndex(UserDictionary.Words._ID));
+                wrapper.WORD = c.getString(c.getColumnIndex(UserDictionary.Words.WORD));
+                wrapper.TYPE = "User_Dictionary";
+                suggestionList.add(wrapper);
+                TactileSpellChecker.temp_suggestions.add(wrapper.WORD);
+            }while (c.moveToNext());
        return suggestionList;
     }
 }

@@ -1,8 +1,12 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 /**
- * Created by leapfrog on 6/19/15.
+ * Wrapper class for words
+ *
+ * @author shilushrestha
+ * @date 6/19/15.
  */
+
 public class DictionaryWrapper {
     String WORD;
     int FREQUENCY;

@@ -26,13 +26,13 @@ public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
 
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.activity_main, null);
+            v = inflater.inflate(android.R.layout.simple_list_item_1, null);
         }
 
 		DictionaryWrapper wrapper = list.get(position);
 
         if (wrapper != null) {
-            TextView tt = (TextView) v.findViewById(R.id.text123);
+            TextView tt = (TextView) v.findViewById(android.R.id.text1);
             if (tt != null){
                 tt.setText(wrapper.WORD);
             }
