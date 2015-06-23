@@ -35,7 +35,6 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spell_checker_layout);
         wordSuggestor = TactileWordSuggestor.getInstance(getApplicationContext(), this);
-        android.util.Log.e("Asdadasd","onCreate");
         setElements();
     }
 
@@ -116,9 +115,14 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //wordSuggestor.destroyAll();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        android.util.Log.e("Asdadasd", "onResume");
-       TactileWordSuggestor.getInstance(getApplicationContext(), this).reInitialize();
+        TactileWordSuggestor.getInstance(getApplicationContext(), this).reInitialize();
     }
 }

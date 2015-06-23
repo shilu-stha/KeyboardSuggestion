@@ -39,11 +39,6 @@ public class UserDictionaryHelper extends AsyncQueryHandler {
         this.listener = listener;
     }
 
-    //    private UserDictionaryHelper(Context context, OnTextSearchCompleteListener listener){
-//        this.listener = listener;
-//        this.context = context;
-//    }
-
     public static UserDictionaryHelper getInstance(Context context, OnTextSearchCompleteListener listener) {
         if (instance == null) {
             instance = new UserDictionaryHelper(context.getContentResolver(), listener);
@@ -72,6 +67,7 @@ public class UserDictionaryHelper extends AsyncQueryHandler {
      */
     public void updateNewEntry(String suggestionToUpdate) {
         this.suggestionToUpdate = suggestionToUpdate;
+
         this.startQuery(QUERY_UPDATE_TOKEN, null ,UserDictionary.Words.CONTENT_URI, SELECTION_COLUMNS, UPDATE_CONDITION,
                 new String[]{suggestionToUpdate}, null);
     }
@@ -91,9 +87,12 @@ public class UserDictionaryHelper extends AsyncQueryHandler {
                 suggestionList.add(wrapper);
                 cursor.moveToNext();
             }
+
             listener.onTextSearchComplete(enteredWord, ticket, suggestionList);
         }else if( token == QUERY_UPDATE_TOKEN){
             cursor.moveToFirst();
+
+            //if cursor exists update the word's frequency else add word to dictionary
             if (!cursor.isAfterLast()) {
                 int dictFreq = cursor.getInt(cursor.getColumnIndex(UserDictionary.Words.FREQUENCY));
                 ContentValues contentValue = new ContentValues();

@@ -19,8 +19,8 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
 
     private final SpellCheckerHelper mSpellChecker;
     private final UserDictionaryHelper mUserDictionary;
-    private final OnTextSearchCompleteListener listener;
-    private final SpellCheckerSession spellCheckerSession;
+    private OnTextSearchCompleteListener listener;
+    private SpellCheckerSession spellCheckerSession;
 
     ArrayList<DictionaryWrapper> userDictionarList;
     ArrayList<DictionaryWrapper> spellCheckerList;
@@ -35,12 +35,7 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
     private TactileWordSuggestor(Context context, OnTextSearchCompleteListener listener) {
         this.listener = listener;
         mSpellChecker = SpellCheckerHelper.getInstance(context, this);
-
         mUserDictionary = UserDictionaryHelper.getInstance(context, this);
-        TextServicesManager textServicesManager = (TextServicesManager) context.getSystemService(
-                Context.TEXT_SERVICES_MANAGER_SERVICE);
-        spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), mSpellChecker, true);
-        mSpellChecker.setSession(spellCheckerSession);
     }
 
     public static TactileWordSuggestor getInstance(Context context, OnTextSearchCompleteListener listener) {
@@ -113,11 +108,12 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
         spellCheckerList.removeAll(userDictionarList);
         spellCheckerList.remove(addNewWord(word));
         userDictionarList.addAll(spellCheckerList);
-//        userDictionarList.remove(word);
 
         userDictionarList.add(0, addNewWord(word));
 
-        listener.onTextSearchComplete(word, ticket, userDictionarList);
+        if(listener != null){
+            listener.onTextSearchComplete(word, ticket, userDictionarList);
+        }
     }
 
     /**
@@ -149,4 +145,13 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
         SpellCheckerHelper.getInstance(context,listener).reInitialize();
     }
 
+    /**
+     * Todo need to check when the app is destroyed the list in not updated in main. All the values are being sent from the helper class and suggestor class.
+     */
+    public void destroyAll() {
+        if(spellCheckerSession != null){
+            spellCheckerSession.cancel();
+//        listener = null;
+        }
+    }
 }

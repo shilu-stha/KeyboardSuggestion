@@ -127,10 +127,4 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
                 Context.TEXT_SERVICES_MANAGER_SERVICE);
         spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), this, true);
     }
-    /**
-     * @param spellCheckerSession
-     */
-    public void setSession(SpellCheckerSession spellCheckerSession) {
-        this.spellCheckerSession = spellCheckerSession;
-    }
 }
