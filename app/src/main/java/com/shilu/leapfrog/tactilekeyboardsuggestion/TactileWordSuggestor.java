@@ -1,6 +1,7 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 import android.content.Context;
+import android.view.textservice.SpellCheckerSession;
 import android.view.textservice.TextServicesManager;
 
 import java.sql.Timestamp;
@@ -16,10 +17,10 @@ import java.util.Map;
 public class TactileWordSuggestor implements OnTextSearchCompleteListener {
     private static TactileWordSuggestor instance = null;
 
-    private final Context context;
     private final SpellCheckerHelper mSpellChecker;
     private final UserDictionaryHelper mUserDictionary;
     private final OnTextSearchCompleteListener listener;
+    private final SpellCheckerSession spellCheckerSession;
 
     ArrayList<DictionaryWrapper> userDictionarList;
     ArrayList<DictionaryWrapper> spellCheckerList;
@@ -29,13 +30,17 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
     private static final String KEY_DICT = "UserDictionary";
     private static final String KEY_SPELLCHECKER = "SpellChecker";
     private static final int LIST_SIZE = 2;
+    Context context;
 
     private TactileWordSuggestor(Context context, OnTextSearchCompleteListener listener) {
-        this.context = context;
         this.listener = listener;
         mSpellChecker = SpellCheckerHelper.getInstance(context, this);
 
         mUserDictionary = UserDictionaryHelper.getInstance(context, this);
+        TextServicesManager textServicesManager = (TextServicesManager) context.getSystemService(
+                Context.TEXT_SERVICES_MANAGER_SERVICE);
+        spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), mSpellChecker, true);
+        mSpellChecker.setSession(spellCheckerSession);
     }
 
     public static TactileWordSuggestor getInstance(Context context, OnTextSearchCompleteListener listener) {
