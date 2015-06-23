@@ -10,11 +10,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
-public class SpellCheckerActivity extends Activity {
+public class SpellCheckerActivity extends Activity implements OnTextSearchCompleteListener {
 
     EditText edt_input;
 
@@ -23,21 +25,20 @@ public class SpellCheckerActivity extends Activity {
     DictionaryAdapter adapter;
     ListView listView;
     String[] words;
-    private TactileUserDictionary tactDictionary;
+
+    private TactileWordSuggestor wordSuggestor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spell_checker_layout);
-        TactileSpellChecker.getInstance(getApplicationContext()).setTaskListener(checkerListener);
-        tactDictionary = new TactileUserDictionary(getApplicationContext());
+        wordSuggestor = TactileWordSuggestor.getInstance(getApplicationContext(), this);
+
         setElements();
     }
 
     /**
      * Initialize editText, listView, adapters.
-     * Add textChangerListeners.
-     *
-     * @author Manas Shrestha
+     * Add textChangerListeners
      */
     public void setElements() {
         edt_input = (EditText) findViewById(R.id.edt_input);
@@ -62,7 +63,8 @@ public class SpellCheckerActivity extends Activity {
                                                  } else {
                                                      String sentence = s.toString();
                                                      words = sentence.split("\\s+");
-                                                     TactileSpellChecker.getInstance(getApplicationContext()).getSuggestions(words[words.length - 1]);
+
+                                                     wordSuggestor.getSuggestions(words[words.length - 1]);
                                                  }
                                              }
 
@@ -79,7 +81,7 @@ public class SpellCheckerActivity extends Activity {
                                             @Override
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                                words[words.length - 1] = finalSuggestion.get(position).WORD;
+                                                words[words.length - 1] = finalSuggestion.get(position).word;
                                                 String newSentence = "";
 
                                                 for (int i = 0; i < words.length; i++) {
@@ -89,7 +91,7 @@ public class SpellCheckerActivity extends Activity {
                                                     }
                                                 }
                                                 //add selected words to UserDictionary
-                                                TactileSpellChecker.getInstance(getApplicationContext()).addToDictionary(position);
+                                                wordSuggestor.addToDictionary(position);
 
                                                 edt_input.setText(newSentence);
                                                 edt_input.setSelection(edt_input.getText().length());
@@ -100,18 +102,13 @@ public class SpellCheckerActivity extends Activity {
 
     }
 
-    TactileSpellChecker.CheckerListener checkerListener = new TactileSpellChecker.CheckerListener() {
-
-        @Override
-        public void getSuggestions(String enteredWord, List<DictionaryWrapper> list) {
-            if (list.size() != 0) {
-                finalSuggestion.clear();
-                listView.setVisibility(View.VISIBLE);
-                finalSuggestion.addAll(list);
-                adapter.notifyDataSetChanged();
-            }
+    @Override
+    public void onTextSearchComplete(String word, HashMap<String, Timestamp> ticket, ArrayList<DictionaryWrapper> suggestionList) {
+        if (suggestionList.size() != 0) {
+            finalSuggestion.clear();
+            listView.setVisibility(View.VISIBLE);
+            finalSuggestion.addAll(suggestionList);
+            adapter.notifyDataSetChanged();
         }
-
-    };
-
+    }
 }

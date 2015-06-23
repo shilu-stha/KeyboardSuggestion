@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by leapfrog on 6/19/15.
+ * Created by shilushrestha on 6/19/15.
  */
 public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
 
@@ -34,7 +34,7 @@ public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
         if (wrapper != null) {
             TextView tt = (TextView) v.findViewById(android.R.id.text1);
             if (tt != null){
-                tt.setText(wrapper.WORD);
+                tt.setText(wrapper.word);
             }
 
         }
