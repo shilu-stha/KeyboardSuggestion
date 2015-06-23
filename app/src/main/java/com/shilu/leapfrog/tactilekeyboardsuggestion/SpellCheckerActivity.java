@@ -1,11 +1,13 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.textservice.TextServicesManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -14,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
 public class SpellCheckerActivity extends Activity implements OnTextSearchCompleteListener {
@@ -32,7 +35,7 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spell_checker_layout);
         wordSuggestor = TactileWordSuggestor.getInstance(getApplicationContext(), this);
-
+        android.util.Log.e("Asdadasd","onCreate");
         setElements();
     }
 
@@ -110,5 +113,12 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
             finalSuggestion.addAll(suggestionList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        android.util.Log.e("Asdadasd", "onResume");
+       TactileWordSuggestor.getInstance(getApplicationContext(), this).reInitialize();
     }
 }
