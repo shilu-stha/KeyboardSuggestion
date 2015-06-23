@@ -8,13 +8,11 @@ import android.view.textservice.SentenceSuggestionsInfo;
 import android.view.textservice.SpellCheckerSession;
 import android.view.textservice.SuggestionsInfo;
 import android.view.textservice.TextInfo;
-import android.view.textservice.TextServicesManager;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Helper class to implement spellcheck with the use of listener
@@ -39,9 +37,6 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
     private SpellCheckerHelper(Context context, OnTextSearchCompleteListener listener) {
         this.listener = listener;
         this.context = context;
-        TextServicesManager textServicesManager = (TextServicesManager) context.getSystemService(
-                Context.TEXT_SERVICES_MANAGER_SERVICE);
-        spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), this, true);
     }
 
     public static SpellCheckerHelper getInstance(Context context, OnTextSearchCompleteListener listener) {
@@ -121,5 +116,12 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
         } catch (ActivityNotFoundException e) {
             // Error
         }
+    }
+
+    /**
+     * @param spellCheckerSession
+     */
+    public void setSession(SpellCheckerSession spellCheckerSession) {
+        this.spellCheckerSession = spellCheckerSession;
     }
 }
