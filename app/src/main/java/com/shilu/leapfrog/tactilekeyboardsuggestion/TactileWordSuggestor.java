@@ -12,7 +12,6 @@ import java.util.Map;
 
 /**
  * Base class to implement text suggestion
- *
  */
 public class TactileWordSuggestor implements OnTextSearchCompleteListener {
     private static TactileWordSuggestor instance = null;
@@ -35,6 +34,7 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
         this.context = context;
         this.listener = listener;
         mSpellChecker = SpellCheckerHelper.getInstance(context, this);
+
         mUserDictionary = UserDictionaryHelper.getInstance(context, this);
     }
 
@@ -138,6 +138,10 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
     public void addToDictionary(int position) {
         mUserDictionary.updateNewEntry(userDictionarList.get(position).word);
 
+    }
+
+    public void reInitialize(){
+        SpellCheckerHelper.getInstance(context,listener).reInitialize();
     }
 
 }

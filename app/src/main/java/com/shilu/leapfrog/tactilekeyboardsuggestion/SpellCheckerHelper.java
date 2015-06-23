@@ -18,11 +18,12 @@ import java.util.Locale;
 
 /**
  * Helper class to implement spellcheck with the use of listener
- *
  */
 public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessionListener {
 
-    private SpellCheckerSession spellCheckerSession;
+    public static SpellCheckerSession spellCheckerSession;
+    public static TextServicesManager textServicesManager;
+
     private OnTextSearchCompleteListener listener;
     private HashMap<String, Timestamp> ticket;
     private Context context;
@@ -35,11 +36,10 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
     private static final String ERROR_ENABLESPELLCHECKER_MSG = "Please turn on the spell checker from setting";
     private static final String WORD_TYPE_INBUILD = "InBuilt_Dictionary";
 
-
     private SpellCheckerHelper(Context context, OnTextSearchCompleteListener listener) {
         this.listener = listener;
         this.context = context;
-        TextServicesManager textServicesManager = (TextServicesManager) context.getSystemService(
+        textServicesManager = (TextServicesManager) context.getSystemService(
                 Context.TEXT_SERVICES_MANAGER_SERVICE);
         spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), this, true);
     }
@@ -105,7 +105,6 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
     /**
      * Goto spellchecker settings if spell checker is not active(enabled).
      * Show toast
-     *
      */
     private void gotoSpellCheckerSetting() {
         // Show the message to user
@@ -121,5 +120,11 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
         } catch (ActivityNotFoundException e) {
             // Error
         }
+    }
+
+    public  void reInitialize(){
+        textServicesManager = (TextServicesManager) context.getSystemService(
+                Context.TEXT_SERVICES_MANAGER_SERVICE);
+        spellCheckerSession = textServicesManager.newSpellCheckerSession(null, Locale.getDefault(), this, true);
     }
 }
