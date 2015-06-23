@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * SpellChecker Helper
+ * Helper class to implement spellcheck with the use of listener
  *
  */
 public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessionListener {
@@ -84,13 +84,12 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
     }
 
     /**
-     * Get suggestions from spellchecker
+     * Get suggestions from spellchecker session
      *
      * @param word
      * @param ticket
-     * @param tactileWordSuggestor
      */
-    public void getSuggestions(String word, HashMap<String, Timestamp> ticket, TactileWordSuggestor tactileWordSuggestor) {
+    public void getSuggestions(String word, HashMap<String, Timestamp> ticket) {
 
         this.enteredWord = word;
         this.ticket = ticket;
@@ -104,8 +103,9 @@ public class SpellCheckerHelper implements SpellCheckerSession.SpellCheckerSessi
     }
 
     /**
-     * Show toast.
-     * Goto spellchecker settings.
+     * Goto spellchecker settings if spell checker is not active(enabled).
+     * Show toast
+     *
      */
     private void gotoSpellCheckerSetting() {
         // Show the message to user

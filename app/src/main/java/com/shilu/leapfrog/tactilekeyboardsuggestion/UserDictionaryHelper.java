@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Make required communications with UserDictionary
+ * Make required communications with UserDictionary Table
  *
  */
 public class UserDictionaryHelper {
@@ -44,9 +44,8 @@ public class UserDictionaryHelper {
      *
      * @param word
      * @param ticket
-     * @param listener
      */
-    public void getSuggestions(String word, HashMap<String, Timestamp> ticket, OnTextSearchCompleteListener listener) {
+    public void getSuggestions(String word, HashMap<String, Timestamp> ticket) {
         this.ticket =ticket;
 
         ArrayList<DictionaryWrapper> suggestionList = new ArrayList<>();

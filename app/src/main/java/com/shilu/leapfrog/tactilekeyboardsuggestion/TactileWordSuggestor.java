@@ -1,11 +1,13 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 import android.content.Context;
+import android.view.textservice.TextServicesManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -63,8 +65,8 @@ public class TactileWordSuggestor implements OnTextSearchCompleteListener {
             }
             mainTicket.add(i, map);
         }
-        mSpellChecker.getSuggestions(word, mainTicket.get(1), this);
-        mUserDictionary.getSuggestions(word, mainTicket.get(0), this);
+        mSpellChecker.getSuggestions(word, mainTicket.get(1));
+        mUserDictionary.getSuggestions(word, mainTicket.get(0));
     }
 
     /**
