@@ -1,13 +1,11 @@
 package com.shilu.leapfrog.tactilekeyboardsuggestion;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.textservice.TextServicesManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -16,14 +14,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 
 public class SpellCheckerActivity extends Activity implements OnTextSearchCompleteListener {
 
     EditText edt_input;
 
-    public static final List<DictionaryWrapper> finalSuggestion = new ArrayList<>();
+    public ArrayList<DictionaryWrapper> finalSuggestion = new ArrayList<>();
 
     DictionaryAdapter adapter;
     ListView listView;
@@ -47,8 +44,7 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
 
         listView = (ListView) findViewById(R.id.simpleListView);
 
-        adapter = new DictionaryAdapter(this,
-                android.R.layout.simple_list_item_1, finalSuggestion);
+        adapter = new DictionaryAdapter(this, android.R.layout.simple_list_item_1, finalSuggestion);
 
         listView.setAdapter(adapter);
 
@@ -110,7 +106,8 @@ public class SpellCheckerActivity extends Activity implements OnTextSearchComple
             finalSuggestion.clear();
             listView.setVisibility(View.VISIBLE);
             finalSuggestion.addAll(suggestionList);
-            adapter.notifyDataSetChanged();
+            adapter.swapItems(finalSuggestion);
+            //adapter.notifyDataSetChanged();
         }
     }
 

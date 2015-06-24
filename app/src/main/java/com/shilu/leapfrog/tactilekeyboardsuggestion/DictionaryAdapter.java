@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,10 +15,11 @@ import java.util.List;
  */
 public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
 
-    List<DictionaryWrapper> list;
-    public DictionaryAdapter(Context context, int resource, List<DictionaryWrapper> list) {
+    ArrayList<DictionaryWrapper> list;
+    public DictionaryAdapter(Context context, int resource, ArrayList<DictionaryWrapper> list) {
         super(context, resource);
         this.list = list;
+        //System.out.println("size "+list.size());
     }
 
     @Override
@@ -30,7 +32,7 @@ public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
         }
 
 		DictionaryWrapper wrapper = list.get(position);
-
+        //System.out.println("wrapper "+wrapper.word);
         if (wrapper != null) {
             TextView tt = (TextView) v.findViewById(android.R.id.text1);
             if (tt != null){
@@ -39,6 +41,11 @@ public class DictionaryAdapter extends ArrayAdapter<DictionaryWrapper>{
 
         }
         return v;
+    }
+
+    public void swapItems(ArrayList<DictionaryWrapper> items) {
+        this.list = items;
+        notifyDataSetChanged();
     }
 
     @Override
